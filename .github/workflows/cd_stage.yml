@@ -27,9 +27,10 @@ jobs:
             git pull
 
             pnpm install --force-lockfile
+            pm2 stop all
             pnpm run build
 
-            pm2 restart http-server
-            pm2 restart web
-            pm2 restart ws-server
+            pm2 start http-server
+            pm2 start web
+            pm2 start ws-server
           EOF
