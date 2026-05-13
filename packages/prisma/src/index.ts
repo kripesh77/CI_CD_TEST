@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
 import { existsSync } from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 if (!process.env.DATABASE_URL) {
-  const envPath = fileURLToPath(new URL("../.env", import.meta.url));
+  const baseDir = path.dirname(fileURLToPath(import.meta.url));
+  const envPath = path.resolve(baseDir, "../.env");
   if (existsSync(envPath)) {
     dotenv.config({ path: envPath });
   }
