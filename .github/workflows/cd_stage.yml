@@ -26,9 +26,9 @@ jobs:
 
             git pull
 
-            pnpm install --force-lockfile
+            sudo pnpm install --force-lockfile
             pm2 stop all
-            pnpm run build
+            sudo pnpm run build
 
             pm2 start http-server
             pm2 start web
