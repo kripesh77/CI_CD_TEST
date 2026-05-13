@@ -1,0 +1,22 @@
+name: Depoly to stage
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  redeploy:
+    name: Deploying everything to staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into the server
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY_STAGE }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          ssh -i ~/ssh_key ubuntu@74.225.189.66 'cd CI_CD_TEST && git pull'
+          pnpm install
+          pnpm run build
+          pm2 restart http-server
+          pm2 restart web
+          pm2 restart ws-server
