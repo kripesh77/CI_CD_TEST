@@ -1,8 +1,9 @@
-name: Depoly to stage
+name: Deploy to stage
+
 on:
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   redeploy:
@@ -14,13 +15,21 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY_STAGE }}" > ~/ssh_key
           chmod 600 ~/ssh_key
-          mkdir -p /home/runner/.ssh
-          ls /home/runner/.ssh
-          touch /home/runner/.ssh/known_hosts
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/home/runner/.ssh/known_hosts
-          ssh -i ~/ssh_key ubuntu@74.225.189.66 'cd CI_CD_TEST && git pull'
-          pnpm install
-          pnpm run build
-          pm2 restart http-server
-          pm2 restart web
-          pm2 restart ws-server
+
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+          ssh -i ~/ssh_key ubuntu@74.225.189.66 << 'EOF'
+            cd CI_CD_TEST
+
+            git pull
+
+            pnpm install
+            pnpm run build
+
+            pm2 restart http-server
+            pm2 restart web
+            pm2 restart ws-server
+          EOF
