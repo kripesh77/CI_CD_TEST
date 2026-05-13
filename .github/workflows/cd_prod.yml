@@ -21,7 +21,7 @@ jobs:
 
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-          ssh -i ~/ssh_key ubuntu@20.219.164.78 << 'EOF'
+          ssh -i ~/ssh_key azureuser@20.219.164.78 << 'EOF'
             cd CI_CD_TEST
 
             git pull origin production
